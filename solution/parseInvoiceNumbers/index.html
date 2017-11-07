@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta charset="utf-8">
-    <title> File string info </title>
+    <title> Parse Invoice Numbers by G1JI </title>
     <link rel="shortcut icon" href="images/fev.jpg" />
     <script src="bower_components/angular/angular.min.js" type="text/javascript"></script>
     <link href="stylesheets/style.css" rel="stylesheet" type="text/css"/>
@@ -10,8 +10,8 @@
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <script src="js/enukeApp.js" type="text/javascript"></script>      
 </head>
-<body ng-app="enukeApp" ng-controller="mainCtrl"  ng-init='fileUploadPage = true;'>
-    <div  ng-show="fileUploadPage">
+<body ng-app="enukeApp" ng-controller="mainCtrl"  ng-init='resultPage = false;'>
+    <div  ng-show="!resultPage">
         <div class="btn-main">
             <div class="upload-btn-wrapper">
                 <input type="file" id='txtFile' file-model="myFile" name="myfile" accept=".txt"/>
@@ -23,11 +23,14 @@
             <button class="btn  btn-success btn-xs btn-block" ng-show='myFile' ng-click="parseInvoiceNumbers()">Parse Invoice Numbers</button>
         </div>
     </div>
-    <div ng-show="!fileUploadPage">
-        <span class='seefile' ng-click='openUplodedFile()'>
-            See file content...
-        </span>
-        <div id="svg-chart" >
+    <div ng-show="resultPage" >
+        <h3>File Data</h3>
+        <div>
+            <pre>{{fileData}}</pre>
+        </div>
+        <h3>Result</h3>
+        <div ng-repeat="invoiceNumber in invoiceNumbers" class="panel panel-default">
+            {{invoiceNumber}}
         </div>
     </div>
 </body>

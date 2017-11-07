@@ -54,6 +54,7 @@ angular.module('enukeApp', [])
 //            010
 //            111
 //            011
+            $scope.invoiceNumbers =[];
             var g1jiHashMap = {
                 175: 0,
                 9: 1,
@@ -77,6 +78,7 @@ angular.module('enukeApp', [])
                 var reader = new FileReader();
 
                 reader.onload = function (e) {
+                    $scope.fileData = reader.result;
                     var lines = reader.result.split("\n");
                     var rowInvoiceNumber = [];
                     var rowInvoiceNumbers = [];
@@ -101,7 +103,12 @@ angular.module('enukeApp', [])
                             nvoiceNumber += g1jiHashMap[parseInt(hash, 2)];
                         }
                         console.log(nvoiceNumber);
+                        $scope.invoiceNumbers.push(nvoiceNumber);
                     });
+                    $scope.resultPage = true;
+                    $scope.safeApply();
+                    downloadResult('result.txt', $scope.invoiceNumbers.join("\n"))
+                    
                 };
                 reader.readAsText(file);
                 function binaryEncode(arr) {
@@ -112,4 +119,26 @@ angular.module('enukeApp', [])
                     return binaryStr;
                 }
             };
+            function downloadResult(filename, text) {
+                  var element = document.createElement('a');
+                  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                  element.setAttribute('download', filename);
+
+                  element.style.display = 'none';
+                  document.body.appendChild(element);
+
+                  element.click();
+
+                  document.body.removeChild(element);
+                }
+            $scope.safeApply = function(fn) {
+                  var phase = this.$root.$$phase;
+                  if(phase == '$apply' || phase == '$digest') {
+                    if(fn && (typeof(fn) === 'function')) {
+                      fn();
+                    }
+                  } else {
+                    this.$apply(fn);
+                  }
+                };
         });
